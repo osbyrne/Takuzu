@@ -3,8 +3,10 @@
 
 char* row_coordinates = {"abcdefgh"};
 char* column_coordinates = {"12345678"};
+int** grid;
+int size;
 
-int verify_grid_integrity(int **grid, int size) {
+int verify_grid_integrity() {
   int row_zeroes, row_ones = 0;
   int column_zeroes, column_ones = 0;
   int row_streak, column_streak = 0;
@@ -51,7 +53,7 @@ int verify_grid_integrity(int **grid, int size) {
   return 1;
 }
 
-int **generate_the_grid(int size) {
+int **generate_the_grid() {
   int **grid = malloc(sizeof(int *) * size);
 
   for (int i = 0; i < size; i++) {
@@ -70,7 +72,7 @@ int get_grid_size() {
   return size;
 }
 
-void display_the_grid(int **grid, int size) {
+void display_the_grid() {
   printf("\n        ");
   for (int i = 0; i < size; i++) {
     printf("%c  ", column_coordinates[i]);
@@ -82,14 +84,13 @@ void display_the_grid(int **grid, int size) {
   } printf("\n\n");
 }
 
-void free_memory(int** grid, int size) {
+void free_memory() {
   for (int i = 0; i < size; i++) {
     free(grid[i]);
     grid[i] = NULL;
   }
   free(grid);
 }
-
 
 int from_row_index_to_grid_latitude(char row_index) {
   for (int i=0; i<size; i++) {
@@ -107,7 +108,7 @@ int from_column_index_to_grid_longitude(char column_index) {
   }
 }
 
-void swap(int** grid, int size, int x, int y) {
+void swap(int x, int y) {
   if (grid[x][y] == 2) {
     grid[x][y] = 0;
   } else {
@@ -116,11 +117,11 @@ void swap(int** grid, int size, int x, int y) {
 }
 
 int main() {
-  int size = get_grid_size();
-  int **grid = generate_the_grid(size);
+  size = get_grid_size();
+  grid = generate_the_grid();
   while(1) {
-    display_the_grid(grid, size);
-    if (verify_grid_integrity(grid, size) == 1) {
+    display_the_grid();
+    if (verify_grid_integrity() == 1) {
       printf("you did it! BRAVO\n\n");
       break;
     }
@@ -128,18 +129,17 @@ int main() {
     char row_index;
     printf("\ngive a row > ");
     scanf("%s", &row_index);
+    int x = from_row_index_to_grid_latitude(row_index);
 
     char column_index;
     printf("\ngive a column > ");
     scanf("%s", &column_index);
-
-    int x = from_row_index_to_grid_latitude(row_index);
     int y = from_column_index_to_grid_longitude(column_index);
-    swap(grid, size,  x, y);
-
+    swap(x, y);
+    display_the_grid();
     printf("__end of test__\n\n");
     break;
   }
-  free_memory(grid, size);
+  free_memory();
   return 0;
 }
