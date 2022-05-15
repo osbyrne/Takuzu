@@ -3,17 +3,18 @@
 
 char* row_coordinates = {"abcdefgh"};
 char* column_coordinates = {"12345678"};
-int** grid;
-int size;
+unsigned** grid;
+unsigned size;
+unsigned lives = 80;
 
-int verify_grid_integrity() {
-  int row_zeroes, row_ones = 0;
-  int column_zeroes, column_ones = 0;
-  int row_streak, column_streak = 0;
-  int last_row_number, last_column_number = 0;
+unsigned verify_grid_integrity() {
+  unsigned row_zeroes, row_ones = 0;
+  unsigned column_zeroes, column_ones = 0;
+  unsigned row_streak, column_streak = 0;
+  unsigned last_row_number, last_column_number = 0;
 
-  for (int row = 0; row < size; row++) {
-    for (int column = 0; column < size; column++) {
+  for (unsigned row = 0; row < size; row++) {
+    for (unsigned column = 0; column < size; column++) {
 
       if (grid[row][column] == 0){
         row_zeroes++;
@@ -29,6 +30,8 @@ int verify_grid_integrity() {
       if (last_row_number == grid[row][column]){
         row_streak++;
         if (row_streak == 3){
+          printf("there's");
+          lives -= 1;
           return 0;
         }
       } else {
@@ -53,17 +56,17 @@ int verify_grid_integrity() {
   return 1;
 }
 
-int **generate_the_grid() {
-  int **grid = malloc(sizeof(int *) * size);
+unsigned **generate_the_grid() {
+  unsigned **grid = malloc(sizeof(unsigned *) * size);
 
-  for (int i = 0; i < size; i++) {
-    grid[i] = malloc(sizeof(int *) * size);
+  for (unsigned i = 0; i < size; i++) {
+    grid[i] = malloc(sizeof(unsigned *) * size);
   }
   return grid;
 }
 
-int get_grid_size() {
-  int size;
+unsigned get_grid_size() {
+  unsigned size;
   while (size != 4 && size != 8) {
     printf("gottta choose a grid size of either 4 or 8!\n\n> ");
     scanf("%d", &size);
@@ -74,41 +77,41 @@ int get_grid_size() {
 
 void display_the_grid() {
   printf("\n        ");
-  for (int i = 0; i < size; i++) {
+  for (unsigned i = 0; i < size; i++) {
     printf("%c  ", column_coordinates[i]);
   } printf("\n");
 
-  for (int i = 0; i < size; i++) {
+  for (unsigned i = 0; i < size; i++) {
     printf("\n  %c     ", row_coordinates[i]);
-    for (int j = 0; j < size; j++) {printf("%d  ", grid[i][j]);}
+    for (unsigned j = 0; j < size; j++) {printf("%d  ", grid[i][j]);}
   } printf("\n\n");
 }
 
 void free_memory() {
-  for (int i = 0; i < size; i++) {
+  for (unsigned i = 0; i < size; i++) {
     free(grid[i]);
     grid[i] = NULL;
   }
   free(grid);
 }
 
-int from_row_index_to_grid_latitude(char row_index) {
-  for (int i=0; i<size; i++) {
+unsigned from_row_index_to_grid_latitude(char row_index) {
+  for (unsigned i=0; i<size; i++) {
     if (row_index == row_coordinates[i]) {
       return i;
     }
   }
 }
 
-int from_column_index_to_grid_longitude(char column_index) {
-  for (int i=0; i<size; i++) {
+unsigned from_column_index_to_grid_longitude(char column_index) {
+  for (unsigned i=0; i<size; i++) {
     if (column_index == column_coordinates[i]) {
       return i;
     }
   }
 }
 
-void swap(int x, int y) {
+void swap(unsigned x, unsigned y) {
   if (grid[x][y] == 2) {
     grid[x][y] = 0;
   } else {
@@ -116,7 +119,7 @@ void swap(int x, int y) {
   }
 }
 
-int main() {
+unsigned main() {
   size = get_grid_size();
   grid = generate_the_grid();
   while(1) {
@@ -129,12 +132,12 @@ int main() {
     char row_index;
     printf("\ngive a row > ");
     scanf("%s", &row_index);
-    int x = from_row_index_to_grid_latitude(row_index);
+    unsigned x = from_row_index_to_grid_latitude(row_index);
 
     char column_index;
     printf("\ngive a column > ");
     scanf("%s", &column_index);
-    int y = from_column_index_to_grid_longitude(column_index);
+    unsigned y = from_column_index_to_grid_longitude(column_index);
     swap(x, y);
     display_the_grid();
     printf("__end of test__\n\n");
